@@ -2,7 +2,6 @@ package com.inmobiliaria.servicio;
 
 import com.inmobiliaria.modelo.Agente;
 import com.inmobiliaria.repositorio.AgenteRepositorio;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +14,19 @@ import java.util.List;
  * @version 1.0
  */
 @Service
-@RequiredArgsConstructor
 public class AgenteServicio {
 
     /** Repositorio para acceder a los datos de agentes */
     private final AgenteRepositorio agenteRepositorio;
+
+    /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param agenteRepositorio repositorio de agentes
+     */
+    public AgenteServicio(AgenteRepositorio agenteRepositorio) {
+        this.agenteRepositorio = agenteRepositorio;
+    }
 
     /**
      * Registra un nuevo agente validando que la cedula sea unica.
@@ -34,7 +41,7 @@ public class AgenteServicio {
         /* Validacion: la cedula del agente debe ser unica */
         if (agenteRepositorio.existsByCedula(agente.getCedula())) {
             throw new RuntimeException(
-                    "Ya existe un agente con la cedula: " + agente.getCedula());
+                "Ya existe un agente con la cedula: " + agente.getCedula());
         }
 
         return agenteRepositorio.save(agente);
@@ -60,8 +67,8 @@ public class AgenteServicio {
     @Transactional(readOnly = true)
     public Agente obtenerAgentePorId(Integer idAgente) {
         return agenteRepositorio.findById(idAgente)
-                .orElseThrow(() -> new RuntimeException(
-                        "Agente no encontrado con ID: " + idAgente));
+            .orElseThrow(() -> new RuntimeException(
+                "Agente no encontrado con ID: " + idAgente));
     }
 
     /**
@@ -77,7 +84,7 @@ public class AgenteServicio {
         /* Verificar que el agente existe antes de actualizar */
         Agente agenteExistente = obtenerAgentePorId(idAgente);
 
-        /* Actualizar campos del agente */
+        /* Actualizar los campos del agente */
         agenteExistente.setNombre(datosNuevos.getNombre());
         agenteExistente.setApellido(datosNuevos.getApellido());
         agenteExistente.setCorreo(datosNuevos.getCorreo());

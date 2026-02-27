@@ -3,7 +3,6 @@ package com.inmobiliaria.controlador;
 import com.inmobiliaria.modelo.Cliente;
 import com.inmobiliaria.servicio.ClienteServicio;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,7 +20,7 @@ import java.util.List;
 
 /**
  * Controlador REST para operaciones CRUD de clientes.
- * Expone los endpoints de la API en la ruta base: /api/clientes
+ * Expone los endpoints en la ruta base: /api/clientes
  * Todos los endpoints retornan JSON automaticamente.
  *
  * @author [Tu nombre]
@@ -29,7 +28,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/clientes")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class ClienteControlador {
 
@@ -37,9 +35,17 @@ public class ClienteControlador {
     private final ClienteServicio clienteServicio;
 
     /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param clienteServicio servicio de clientes
+     */
+    public ClienteControlador(ClienteServicio clienteServicio) {
+        this.clienteServicio = clienteServicio;
+    }
+
+    /**
      * POST /api/clientes
      * Crea un nuevo cliente en el sistema.
-     * @Valid activa las validaciones del modelo.
      *
      * @param cliente datos del cliente a crear
      * @return cliente creado con estado HTTP 201
@@ -103,7 +109,7 @@ public class ClienteControlador {
 
     /**
      * DELETE /api/clientes/{id}
-     * Desactiva un cliente (eliminacion logica, no borra el registro).
+     * Desactiva un cliente (eliminacion logica).
      *
      * @param id identificador del cliente a desactivar
      * @return mensaje de confirmacion con estado HTTP 200

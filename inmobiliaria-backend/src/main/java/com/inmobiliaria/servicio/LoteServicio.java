@@ -2,7 +2,6 @@ package com.inmobiliaria.servicio;
 
 import com.inmobiliaria.modelo.Lote;
 import com.inmobiliaria.repositorio.LoteRepositorio;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +15,19 @@ import java.util.List;
  * @version 1.0
  */
 @Service
-@RequiredArgsConstructor
 public class LoteServicio {
 
     /** Repositorio para acceder a los datos de lotes */
     private final LoteRepositorio loteRepositorio;
+
+    /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param loteRepositorio repositorio de lotes
+     */
+    public LoteServicio(LoteRepositorio loteRepositorio) {
+        this.loteRepositorio = loteRepositorio;
+    }
 
     /**
      * Registra un nuevo lote validando que la referencia sea unica.
@@ -35,7 +42,7 @@ public class LoteServicio {
         /* Validacion: la referencia del lote debe ser unica */
         if (loteRepositorio.existsByReferencia(lote.getReferencia())) {
             throw new RuntimeException(
-                    "Ya existe un lote con la referencia: " + lote.getReferencia());
+                "Ya existe un lote con la referencia: " + lote.getReferencia());
         }
 
         return loteRepositorio.save(lote);
@@ -61,8 +68,8 @@ public class LoteServicio {
     @Transactional(readOnly = true)
     public Lote obtenerLotePorId(Integer idLote) {
         return loteRepositorio.findById(idLote)
-                .orElseThrow(() -> new RuntimeException(
-                        "Lote no encontrado con ID: " + idLote));
+            .orElseThrow(() -> new RuntimeException(
+                "Lote no encontrado con ID: " + idLote));
     }
 
     /**
@@ -90,7 +97,6 @@ public class LoteServicio {
 
     /**
      * Actualiza los datos de un lote existente.
-     * No permite cambiar la referencia del lote.
      *
      * @param idLote ID del lote a actualizar
      * @param datosNuevos nuevos datos del lote
@@ -102,7 +108,7 @@ public class LoteServicio {
         /* Verificar que el lote existe antes de actualizar */
         Lote loteExistente = obtenerLotePorId(idLote);
 
-        /* Actualizar campos del lote */
+        /* Actualizar los campos del lote */
         loteExistente.setUbicacion(datosNuevos.getUbicacion());
         loteExistente.setMunicipio(datosNuevos.getMunicipio());
         loteExistente.setDepartamento(datosNuevos.getDepartamento());
@@ -116,7 +122,7 @@ public class LoteServicio {
 
     /**
      * Cambia el estado de un lote.
-     * Usado internamente cuando se registra o cancela una venta.
+     * Usado cuando se registra o cancela una venta.
      *
      * @param idLote ID del lote
      * @param nuevoEstado nuevo estado a asignar
@@ -143,8 +149,8 @@ public class LoteServicio {
         /* Regla de negocio: solo se eliminan lotes disponibles */
         if (!Lote.ESTADO_DISPONIBLE.equals(lote.getEstado())) {
             throw new RuntimeException(
-                    "Solo se pueden eliminar lotes en estado DISPONIBLE. " +
-                            "Estado actual: " + lote.getEstado());
+                "Solo se pueden eliminar lotes en estado DISPONIBLE. " +
+                "Estado actual: " + lote.getEstado());
         }
 
         loteRepositorio.deleteById(idLote);

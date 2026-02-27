@@ -18,8 +18,7 @@ import java.util.List;
 public interface VentaRepositorio extends JpaRepository<Venta, Integer> {
 
     /**
-     * Obtiene todas las ventas de un cliente especifico
-     * ordenadas por fecha descendente (mas reciente primero).
+     * Obtiene todas las ventas de un cliente ordenadas por fecha descendente.
      *
      * @param idCliente identificador del cliente
      * @return lista de ventas del cliente
@@ -27,8 +26,7 @@ public interface VentaRepositorio extends JpaRepository<Venta, Integer> {
     List<Venta> findByClienteIdClienteOrderByFechaVentaDesc(Integer idCliente);
 
     /**
-     * Obtiene todas las ventas gestionadas por un agente especifico
-     * ordenadas por fecha descendente.
+     * Obtiene todas las ventas gestionadas por un agente ordenadas por fecha.
      *
      * @param idAgente identificador del agente
      * @return lista de ventas del agente
@@ -50,9 +48,9 @@ public interface VentaRepositorio extends JpaRepository<Venta, Integer> {
      * @return lista de arrays con los datos del resumen
      */
     @Query("SELECT a.nombre, a.apellido, COUNT(v), SUM(v.precioFinal) " +
-            "FROM Venta v " +
-            "JOIN v.agente a " +
-            "GROUP BY a.nombre, a.apellido " +
-            "ORDER BY SUM(v.precioFinal) DESC")
+           "FROM Venta v " +
+           "JOIN v.agente a " +
+           "GROUP BY a.nombre, a.apellido " +
+           "ORDER BY SUM(v.precioFinal) DESC")
     List<Object[]> obtenerResumenVentasPorAgente();
 }

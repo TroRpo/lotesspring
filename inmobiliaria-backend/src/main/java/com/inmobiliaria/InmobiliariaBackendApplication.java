@@ -5,11 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Clase principal que arranca toda la aplicacion Spring Boot.
- *
- * @SpringBootApplication equivale a tres anotaciones juntas:
- *   @Configuration        permite definir beans de configuracion
- *   @EnableAutoConfiguration  Spring configura todo automaticamente
- *   @ComponentScan        escanea paquetes buscando componentes
+ * Inicia el servidor Tomcat embebido en el puerto 8080.
  *
  * @author [Tu nombre]
  * @version 1.0
@@ -19,8 +15,6 @@ public class InmobiliariaBackendApplication {
 
     /**
      * Metodo principal que lanza la aplicacion.
-     * Spring Boot levanta el servidor Tomcat embebido
-     * y conecta automaticamente con PostgreSQL.
      *
      * @param args argumentos de linea de comandos
      */

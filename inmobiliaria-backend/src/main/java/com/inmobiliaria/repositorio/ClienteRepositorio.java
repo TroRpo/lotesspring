@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * Repositorio JPA para la entidad Cliente.
  * Spring Data JPA genera la implementacion SQL automaticamente.
- * JpaRepository ya provee: save, findById, findAll, delete, count, etc.
+ * JpaRepository provee: save, findById, findAll, delete, count, etc.
  *
  * @author [Tu nombre]
  * @version 1.0
@@ -22,7 +22,6 @@ public interface ClienteRepositorio extends JpaRepository<Cliente, Integer> {
 
     /**
      * Busca todos los clientes activos ordenados por apellido y nombre.
-     * Spring genera el SQL por el nombre del metodo.
      *
      * @return lista de clientes activos
      */
@@ -54,15 +53,14 @@ public interface ClienteRepositorio extends JpaRepository<Cliente, Integer> {
 
     /**
      * Busca clientes cuyo nombre o apellido contenga el texto dado.
-     * ILIKE hace la busqueda sin importar mayusculas o minusculas.
      *
      * @param texto texto a buscar
      * @return lista de clientes que coinciden
      */
     @Query("SELECT c FROM Cliente c " +
-            "WHERE (LOWER(c.nombre) LIKE LOWER(CONCAT('%', :texto, '%')) " +
-            "OR LOWER(c.apellido) LIKE LOWER(CONCAT('%', :texto, '%'))) " +
-            "AND c.activo = TRUE " +
-            "ORDER BY c.apellido")
+           "WHERE (LOWER(c.nombre) LIKE LOWER(CONCAT('%', :texto, '%')) " +
+           "OR LOWER(c.apellido) LIKE LOWER(CONCAT('%', :texto, '%'))) " +
+           "AND c.activo = TRUE " +
+           "ORDER BY c.apellido")
     List<Cliente> buscarPorNombreOApellido(@Param("texto") String texto);
 }

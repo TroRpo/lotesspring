@@ -3,7 +3,6 @@ package com.inmobiliaria.controlador;
 import com.inmobiliaria.modelo.Venta;
 import com.inmobiliaria.servicio.VentaServicio;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,14 +20,13 @@ import java.util.List;
 
 /**
  * Controlador REST para operaciones CRUD de ventas.
- * Expone los endpoints de la API en la ruta base: /api/ventas
+ * Expone los endpoints en la ruta base: /api/ventas
  *
  * @author [Tu nombre]
  * @version 1.0
  */
 @RestController
 @RequestMapping("/api/ventas")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class VentaControlador {
 
@@ -36,9 +34,18 @@ public class VentaControlador {
     private final VentaServicio ventaServicio;
 
     /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param ventaServicio servicio de ventas
+     */
+    public VentaControlador(VentaServicio ventaServicio) {
+        this.ventaServicio = ventaServicio;
+    }
+
+    /**
      * POST /api/ventas
      * Registra una nueva venta y marca el lote como VENDIDO.
-     * Si el lote no esta disponible, retorna error.
+     * Si el lote no esta disponible retorna error.
      *
      * @param venta datos de la venta a registrar
      * @return venta registrada con estado HTTP 201
@@ -46,7 +53,7 @@ public class VentaControlador {
     @PostMapping
     public ResponseEntity<Venta> registrarVenta(@Valid @RequestBody Venta venta) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ventaServicio.registrarVenta(venta));
+                             .body(ventaServicio.registrarVenta(venta));
     }
 
     /**
@@ -83,7 +90,7 @@ public class VentaControlador {
     public ResponseEntity<List<Venta>> obtenerPorCliente(
             @PathVariable Integer idCliente) {
         return ResponseEntity.ok(
-                ventaServicio.obtenerVentasPorCliente(idCliente));
+            ventaServicio.obtenerVentasPorCliente(idCliente));
     }
 
     /**
@@ -99,7 +106,7 @@ public class VentaControlador {
             @PathVariable Integer id,
             @RequestParam String observaciones) {
         return ResponseEntity.ok(
-                ventaServicio.actualizarObservaciones(id, observaciones));
+            ventaServicio.actualizarObservaciones(id, observaciones));
     }
 
     /**

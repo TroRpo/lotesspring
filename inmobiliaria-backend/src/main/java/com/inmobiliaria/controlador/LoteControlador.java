@@ -3,7 +3,6 @@ package com.inmobiliaria.controlador;
 import com.inmobiliaria.modelo.Lote;
 import com.inmobiliaria.servicio.LoteServicio;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,19 +22,27 @@ import java.util.List;
 
 /**
  * Controlador REST para operaciones CRUD de lotes inmobiliarios.
- * Expone los endpoints de la API en la ruta base: /api/lotes
+ * Expone los endpoints en la ruta base: /api/lotes
  *
  * @author [Tu nombre]
  * @version 1.0
  */
 @RestController
 @RequestMapping("/api/lotes")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class LoteControlador {
 
     /** Servicio con la logica de negocio de lotes */
     private final LoteServicio loteServicio;
+
+    /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param loteServicio servicio de lotes
+     */
+    public LoteControlador(LoteServicio loteServicio) {
+        this.loteServicio = loteServicio;
+    }
 
     /**
      * POST /api/lotes
@@ -47,7 +54,7 @@ public class LoteControlador {
     @PostMapping
     public ResponseEntity<Lote> crearLote(@Valid @RequestBody Lote lote) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(loteServicio.crearLote(lote));
+                             .body(loteServicio.crearLote(lote));
     }
 
     /**
@@ -100,7 +107,7 @@ public class LoteControlador {
             @RequestParam BigDecimal min,
             @RequestParam BigDecimal max) {
         return ResponseEntity.ok(
-                loteServicio.obtenerLotesPorRangoPrecio(min, max));
+            loteServicio.obtenerLotesPorRangoPrecio(min, max));
     }
 
     /**

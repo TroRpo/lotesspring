@@ -2,7 +2,6 @@ package com.inmobiliaria.servicio;
 
 import com.inmobiliaria.modelo.Cliente;
 import com.inmobiliaria.repositorio.ClienteRepositorio;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,17 +10,24 @@ import java.util.List;
 /**
  * Servicio que implementa la logica de negocio para clientes.
  * Transactional garantiza integridad en operaciones de escritura.
- * readOnly = true optimiza las consultas que no modifican datos.
  *
  * @author [Tu nombre]
  * @version 1.0
  */
 @Service
-@RequiredArgsConstructor
 public class ClienteServicio {
 
     /** Repositorio para acceder a los datos de clientes */
     private final ClienteRepositorio clienteRepositorio;
+
+    /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param clienteRepositorio repositorio de clientes
+     */
+    public ClienteServicio(ClienteRepositorio clienteRepositorio) {
+        this.clienteRepositorio = clienteRepositorio;
+    }
 
     /**
      * Registra un nuevo cliente validando cedula y correo unicos.
@@ -33,16 +39,16 @@ public class ClienteServicio {
     @Transactional
     public Cliente crearCliente(Cliente cliente) {
 
-        /* Validacion de negocio: la cedula debe ser unica */
+        /* Validacion: la cedula debe ser unica en el sistema */
         if (clienteRepositorio.existsByCedula(cliente.getCedula())) {
             throw new RuntimeException(
-                    "Ya existe un cliente con la cedula: " + cliente.getCedula());
+                "Ya existe un cliente con la cedula: " + cliente.getCedula());
         }
 
-        /* Validacion de negocio: el correo debe ser unico */
+        /* Validacion: el correo debe ser unico en el sistema */
         if (clienteRepositorio.existsByCorreo(cliente.getCorreo())) {
             throw new RuntimeException(
-                    "Ya existe un cliente con el correo: " + cliente.getCorreo());
+                "Ya existe un cliente con el correo: " + cliente.getCorreo());
         }
 
         /* Guardar el cliente en la base de datos */
@@ -69,8 +75,8 @@ public class ClienteServicio {
     @Transactional(readOnly = true)
     public Cliente obtenerClientePorId(Integer idCliente) {
         return clienteRepositorio.findById(idCliente)
-                .orElseThrow(() -> new RuntimeException(
-                        "Cliente no encontrado con ID: " + idCliente));
+            .orElseThrow(() -> new RuntimeException(
+                "Cliente no encontrado con ID: " + idCliente));
     }
 
     /**
@@ -86,7 +92,6 @@ public class ClienteServicio {
 
     /**
      * Actualiza los datos de un cliente existente.
-     * No permite modificar la cedula (identificador unico del cliente).
      *
      * @param idCliente ID del cliente a actualizar
      * @param datosNuevos objeto con los datos actualizados
@@ -110,7 +115,6 @@ public class ClienteServicio {
 
     /**
      * Desactiva un cliente sin borrar su registro (eliminacion logica).
-     * El cliente queda con activo = false y no aparece en las consultas.
      *
      * @param idCliente ID del cliente a desactivar
      */

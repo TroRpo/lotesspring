@@ -52,15 +52,15 @@ public interface LoteRepositorio extends JpaRepository<Lote, Integer> {
      * @return lista de lotes disponibles en ese rango
      */
     @Query("SELECT l FROM Lote l " +
-            "WHERE l.precio BETWEEN :precioMin AND :precioMax " +
-            "AND l.estado = 'DISPONIBLE' " +
-            "ORDER BY l.precio ASC")
+           "WHERE l.precio BETWEEN :precioMin AND :precioMax " +
+           "AND l.estado = 'DISPONIBLE' " +
+           "ORDER BY l.precio ASC")
     List<Lote> buscarDisponiblesPorRangoPrecio(
             @Param("precioMin") BigDecimal precioMin,
             @Param("precioMax") BigDecimal precioMax);
 
     /**
-     * Busca lotes por municipio y estado (sin importar mayusculas).
+     * Busca lotes por municipio y estado sin importar mayusculas.
      *
      * @param municipio nombre del municipio
      * @param estado estado del lote

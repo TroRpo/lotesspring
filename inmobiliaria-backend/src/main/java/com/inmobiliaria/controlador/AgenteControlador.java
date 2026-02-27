@@ -3,7 +3,6 @@ package com.inmobiliaria.controlador;
 import com.inmobiliaria.modelo.Agente;
 import com.inmobiliaria.servicio.AgenteServicio;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,19 +19,27 @@ import java.util.List;
 
 /**
  * Controlador REST para operaciones CRUD de agentes inmobiliarios.
- * Expone los endpoints de la API en la ruta base: /api/agentes
+ * Expone los endpoints en la ruta base: /api/agentes
  *
  * @author [Tu nombre]
  * @version 1.0
  */
 @RestController
 @RequestMapping("/api/agentes")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class AgenteControlador {
 
     /** Servicio con la logica de negocio de agentes */
     private final AgenteServicio agenteServicio;
+
+    /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param agenteServicio servicio de agentes
+     */
+    public AgenteControlador(AgenteServicio agenteServicio) {
+        this.agenteServicio = agenteServicio;
+    }
 
     /**
      * POST /api/agentes
@@ -44,7 +51,7 @@ public class AgenteControlador {
     @PostMapping
     public ResponseEntity<Agente> crearAgente(@Valid @RequestBody Agente agente) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(agenteServicio.crearAgente(agente));
+                             .body(agenteServicio.crearAgente(agente));
     }
 
     /**

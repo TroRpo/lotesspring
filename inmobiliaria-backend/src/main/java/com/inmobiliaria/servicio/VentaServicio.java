@@ -3,7 +3,6 @@ package com.inmobiliaria.servicio;
 import com.inmobiliaria.modelo.Lote;
 import com.inmobiliaria.modelo.Venta;
 import com.inmobiliaria.repositorio.VentaRepositorio;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ import java.util.List;
  * @version 1.0
  */
 @Service
-@RequiredArgsConstructor
 public class VentaServicio {
 
     /** Repositorio para acceder a los datos de ventas */
@@ -28,10 +26,20 @@ public class VentaServicio {
     private final LoteServicio loteServicio;
 
     /**
+     * Constructor con inyeccion de dependencias.
+     *
+     * @param ventaRepositorio repositorio de ventas
+     * @param loteServicio servicio de lotes
+     */
+    public VentaServicio(VentaRepositorio ventaRepositorio, LoteServicio loteServicio) {
+        this.ventaRepositorio = ventaRepositorio;
+        this.loteServicio = loteServicio;
+    }
+
+    /**
      * Registra una nueva venta y actualiza el estado del lote a VENDIDO.
-     * Si el lote no esta disponible, lanza excepcion y no guarda nada.
-     * La anotacion @Transactional garantiza que ambas operaciones
-     * (guardar venta + actualizar lote) se completen o se cancelen juntas.
+     * Si el lote no esta disponible lanza excepcion y no guarda nada.
+     * Transactional garantiza que ambas operaciones se completen juntas.
      *
      * @param venta datos de la venta a registrar
      * @return venta registrada con su ID generado
@@ -42,13 +50,13 @@ public class VentaServicio {
 
         /* Obtener el lote y verificar que este disponible */
         Lote lote = loteServicio.obtenerLotePorId(
-                venta.getLote().getIdLote());
+            venta.getLote().getIdLote());
 
         /* Regla de negocio: solo se venden lotes disponibles */
         if (!Lote.ESTADO_DISPONIBLE.equals(lote.getEstado())) {
             throw new RuntimeException(
-                    "El lote '" + lote.getReferencia() +
-                            "' no esta disponible. Estado actual: " + lote.getEstado());
+                "El lote " + lote.getReferencia() +
+                " no esta disponible. Estado actual: " + lote.getEstado());
         }
 
         /* Guardar la venta en la base de datos */
@@ -80,8 +88,8 @@ public class VentaServicio {
     @Transactional(readOnly = true)
     public Venta obtenerVentaPorId(Integer idVenta) {
         return ventaRepositorio.findById(idVenta)
-                .orElseThrow(() -> new RuntimeException(
-                        "Venta no encontrada con ID: " + idVenta));
+            .orElseThrow(() -> new RuntimeException(
+                "Venta no encontrada con ID: " + idVenta));
     }
 
     /**
@@ -93,7 +101,7 @@ public class VentaServicio {
     @Transactional(readOnly = true)
     public List<Venta> obtenerVentasPorCliente(Integer idCliente) {
         return ventaRepositorio
-                .findByClienteIdClienteOrderByFechaVentaDesc(idCliente);
+            .findByClienteIdClienteOrderByFechaVentaDesc(idCliente);
     }
 
     /**
